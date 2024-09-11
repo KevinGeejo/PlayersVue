@@ -1,28 +1,51 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Navbar @search="updateSearch" />
+    <PlayersList :players="filteredPlayers" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Navbar from './components/Navbar.vue';
+import PlayersList from './components/PlayersList.vue';
+import playersData from './data/players.json';
 
 export default {
-  name: 'app',
+  data() {
+    return {
+      search: '',
+      players: playersData.originalPlayers,
+    };
+  },
+  computed: {
+    filteredPlayers() {
+      return this.players.filter(player => {
+        const searchTerm = this.search.toLowerCase();
+        return player.name.toLowerCase().includes(searchTerm) || 
+               player.team_name.toLowerCase().includes(searchTerm);
+      });
+    },
+  },
+  methods: {
+    updateSearch(term) {
+      this.search = term; 
+    },
+  },
   components: {
-    HelloWorld
-  }
-}
+    Navbar,
+    PlayersList,
+  },
+};
 </script>
 
 <style>
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  
 }
 </style>
